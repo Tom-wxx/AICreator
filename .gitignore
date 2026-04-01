@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sqlite database
+/data/
+
+# IDE and tool configs
+.idea/
+.claude/
+.playwright-mcp/
+
+# internal docs
+CLAUDE.md
+AGENTS.md

@@ -1,65 +1,62 @@
-import Image from "next/image";
+"use client";
+
+import { MessageSquare, Image, Video, FileText } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAppStore } from "@/lib/store/useAppStore";
+import { Header } from "@/components/layout/Header";
+import { ChatPanel } from "@/components/chat/ChatPanel";
+import { ImageGenerator } from "@/components/workspace/ImageGenerator";
+import { VideoGenerator } from "@/components/workspace/VideoGenerator";
+import { ContentWriter } from "@/components/workspace/ContentWriter";
+
+const tabs = [
+  { value: "chat", label: "AI 对话", icon: MessageSquare },
+  { value: "image", label: "文生图", icon: Image },
+  { value: "video", label: "文生视频", icon: Video },
+  { value: "content", label: "内容生成", icon: FileText },
+] as const;
 
 export default function Home() {
+  const { activeTab, setActiveTab } = useAppStore();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <Header />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+          className="flex flex-1 flex-col overflow-hidden"
+        >
+          <div className="border-b border-border bg-card px-4">
+            <TabsList className="h-10 bg-transparent p-0">
+              {tabs.map(({ value, label, icon: Icon }) => (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  className="gap-1.5 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                >
+                  <Icon className="size-3.5" />
+                  {label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+
+          <TabsContent value="chat" className="mt-0 flex-1 overflow-hidden">
+            <ChatPanel />
+          </TabsContent>
+          <TabsContent value="image" className="mt-0 flex-1 overflow-hidden">
+            <ImageGenerator />
+          </TabsContent>
+          <TabsContent value="video" className="mt-0 flex-1 overflow-hidden">
+            <VideoGenerator />
+          </TabsContent>
+          <TabsContent value="content" className="mt-0 flex-1 overflow-hidden">
+            <ContentWriter />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   );
 }
